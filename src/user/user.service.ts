@@ -106,10 +106,12 @@ export class UserService {
       const passwordMAtch = await bcrypt.compare(accountHolder.password, userExist.password)
 
       if (userExist && passwordMAtch) {
-        const payload = { username: userExist.email };
+        const payloadAccess = { username: userExist.email };
+        const payloadRefresh = { username: userExist.id };
 
         return {
-          access_token: this.jwtService.sign(payload),
+          access_token: this.jwtService.sign(payloadAccess),
+          refresh_token: this.jwtService.sign(payloadRefresh),
         }
 
       }
