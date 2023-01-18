@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
-import CreateUser from '../DTO/userDTO';
+import CreateUser from '../DTO/createUserDTO';
 import UpdateUser from '../DTO/updateUserDTO';
 import Signup from 'src/DTO/signup';
 import * as bcrypt from 'bcrypt';
@@ -42,13 +42,13 @@ export class UserService {
     return this.usersRepository.find();
   }
 
-  RefreshTokens = [];
+  // RefreshTokens = [];
   async createUser(user: CreateUser) {
     const newUser = this.usersRepository.create(user);
     await this.usersRepository.save(newUser);
     return newUser;
   }
-  async updateUser(id: any, user: UpdateUser) {
+  async updateUser(id: string, user: UpdateUser) {
     try {
       const result = await this.usersRepository
         .createQueryBuilder()
@@ -101,13 +101,13 @@ export class UserService {
 
       const userExist = await this.findOneByEmail(accountHolder.email)
       if (!userExist) {
-        return ('Wrong Email')
+        return ('User not found')
       }
       const passwordMAtch = await bcrypt.compare(accountHolder.password, userExist.password)
 
       if (userExist && passwordMAtch) {
-        const payloadAccess = { username: userExist.email };
-        const payloadRefresh = { username: userExist.id };
+        const payloadAccess = { username: userExist.email, userId: userExist.id };
+        const payloadRefresh = { userId: userExist.id };
 
         return {
           access_token: this.jwtService.sign(payloadAccess),

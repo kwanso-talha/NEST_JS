@@ -1,17 +1,18 @@
+
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
-import { UserService } from './user/user.service';
-import { accessConstants } from './constantsAccess'
+
+
 
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy) {
-	constructor(private userService: UserService) {
+	constructor() {
 		super({
 			jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 			ignoreExpiration: false,
-			secretOrKey: accessConstants,
+			secretOrKey: process.env.ACCESS_TOKEN_SECRET || 'access_secret',
 
 		});
 	}
