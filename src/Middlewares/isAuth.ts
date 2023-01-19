@@ -15,7 +15,6 @@ export class AuthenticationMiddleware implements NestMiddleware {
 	use(req: any, res: Response, next: () => void) {
 		const authHeader = req.headers['authorization'];
 		const token = authHeader && authHeader.split(' ')[1];
-		console.log("Token:", token)
 		if (!token)
 			throw new BadRequestException('Auth token is not supplied')
 		try {
@@ -23,7 +22,8 @@ export class AuthenticationMiddleware implements NestMiddleware {
 			req.body.userId = decoded.userId;
 			next();
 		} catch (error) {
-			return error;
+			throw new BadRequestException('Auth token is expired')
+
 		}
 
 	}

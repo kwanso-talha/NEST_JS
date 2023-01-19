@@ -10,16 +10,16 @@ import { JwtRefreshStrategy } from '../jwt.refresh.strategy'
 import { MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { AuthenticationMiddleware } from '../Middlewares/isAuth'
 
+
 @Module({
   imports: [TypeOrmModule.forFeature([User]),
   PassportModule.register({ defaultStrategy: "jwt" }),
 
   JwtModule.register({
-    signOptions: { expiresIn: '1d' },
+    signOptions: { expiresIn: '120s' },
     secret: process.env.ACCESS_TOKEN_SECRET || 'secret',
   }),
   JwtModule.register({
-    signOptions: { expiresIn: '7d' },
     secret: process.env.REFRESH_TOKEN_SECRET || 'secret',
   }),
 
@@ -30,6 +30,8 @@ import { AuthenticationMiddleware } from '../Middlewares/isAuth'
   exports: [UserService]
 })
 export class UserModule {
+
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthenticationMiddleware)
