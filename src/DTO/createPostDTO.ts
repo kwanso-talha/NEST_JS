@@ -1,8 +1,7 @@
 class CreatePost {
-	title: string;
-	body: string;
-	timeToRead: number
-
+  title: string;
+  body: string;
+  timeToRead: number
 }
 
 export default CreatePost;

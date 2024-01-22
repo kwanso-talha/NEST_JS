@@ -12,10 +12,6 @@ import { JwtService } from '@nestjs/jwt';
 @Injectable()
 export class UserService {
 
-
-
-
-
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -35,9 +31,11 @@ export class UserService {
     const result = this.usersRepository.findOneBy({ email });
     return result
   }
+
   async remove(id: string): Promise<void> {
     await this.usersRepository.delete(id);
   }
+
   getAllUsers() {
     return this.usersRepository.find();
   }
@@ -48,6 +46,7 @@ export class UserService {
     await this.usersRepository.save(newUser);
     return newUser;
   }
+
   async updateUser(id: string, user: UpdateUser) {
     try {
       const result = await this.usersRepository
@@ -75,6 +74,7 @@ export class UserService {
       console.log("Error: ", error);
     }
   }
+
   deleteUser(id: string): Promise<any> {
     return this.usersRepository
       .createQueryBuilder()
@@ -98,11 +98,11 @@ export class UserService {
 
   async login(accountHolder: Signup) {
     try {
-
       const userExist = await this.findOneByEmail(accountHolder.email)
       if (!userExist) {
         return ('User not found')
       }
+
       const passwordMAtch = await bcrypt.compare(accountHolder.password, userExist.password)
 
       if (userExist && passwordMAtch) {
@@ -113,13 +113,12 @@ export class UserService {
           access_token: this.jwtService.sign(payloadAccess),
           refresh_token: this.jwtService.sign(payloadRefresh),
         }
-
       }
+
       else return ('Wrong Password')
     } catch (error) {
       console.log(error);
     }
   }
-
 }
 

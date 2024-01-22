@@ -16,9 +16,6 @@ export class User {
   @Column({ nullable: true })
   avatar: string;
 
-
-
-
   @OneToMany(type => Post, post => post.userId)
   posts: Post[];
 

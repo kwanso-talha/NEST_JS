@@ -1,9 +1,7 @@
 class UpdateUser {
-
-	email: string;
-	password: string;
-	avatar: string;
-
+  email: string;
+  password: string;
+  avatar: string;
 }
 
 export default UpdateUser;

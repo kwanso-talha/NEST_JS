@@ -19,6 +19,7 @@ import { AuthenticationMiddleware } from '../Middlewares/isAuth'
     signOptions: { expiresIn: '120s' },
     secret: process.env.ACCESS_TOKEN_SECRET || 'secret',
   }),
+
   JwtModule.register({
     secret: process.env.REFRESH_TOKEN_SECRET || 'secret',
   }),
@@ -29,9 +30,8 @@ import { AuthenticationMiddleware } from '../Middlewares/isAuth'
   providers: [UserService, JwtAccessStrategy, JwtRefreshStrategy],
   exports: [UserService]
 })
+
 export class UserModule {
-
-
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(AuthenticationMiddleware)

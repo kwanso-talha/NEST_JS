@@ -18,14 +18,17 @@ export class UserController {
   getAllUsers() {
     return this.userService.getAllUsers();
   }
+
   @Post()
   async createUser(@Body() user: CreateUser) {
     return this.userService.createUser(user);
   }
+
   @Put(':id')
   async updateUser(@Param('id') id: string, @Body() user: UpdateUser) {
     return this.userService.updateUser(String(id), user);
   }
+
   @Delete(':id')
   async deleteUser(@Param('id') id: string) {
     await this.userService.deleteUser(id)
@@ -46,7 +49,4 @@ export class UserController {
   // async logout(@Body() body: RefreshTokenDto) {
   //   return this.authService.logout(body.refreshToken);
   // }
-
-
-
 }

@@ -7,9 +7,7 @@ import { configService } from './config/config.service';
 import { PostModule } from './post/post.module';
 import { CommentModule } from './comment/comment.module';
 
-
 @Module({
-
   imports: [
     UserModule,
     TypeOrmModule.forRoot(configService.getTypeOrmConfig()),
@@ -19,6 +17,5 @@ import { CommentModule } from './comment/comment.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {
 
-}
+export class AppModule { }
