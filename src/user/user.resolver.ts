@@ -1,12 +1,10 @@
-import {
-	Body
-} from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import CreateUser from '../DTO/createUserDTO';
-// import Signup from '../DTO/signup';
-import UpdateUser from '../DTO/updateUserDTO';
+import Signup from '../DTO/signup';
+// import UpdateUser from '../DTO/updateUserDTO';
 import { User } from './user.entity';
 import { UserService } from './user.service';
+import { AccessUserPayload } from '../DTO/accessTokenDTO';
 
 @Resolver('user')
 export class UserResolver {
@@ -22,6 +20,11 @@ export class UserResolver {
 		return this.userService.createUser(createUser);
 	}
 
+	@Mutation(() => User)
+	async signup(@Args('signup') signup: Signup): Promise<User> {
+		return this.userService.signup(signup);
+	}
+
 	// @Mutation(() => UpdateUser)
 	// async updateUser(@Args({ name: 'id', type: () => String }) id: string, @Body() user: UpdateUser) {
 	// 	return this.userService.updateUser(String(id), user);
@@ -33,18 +36,8 @@ export class UserResolver {
 		return true
 	}
 
-	// @Mutation('/signup')
-	// async signup(@Body() user: Signup) {
-	// 	return this.userService.signup(user)
-	// }
-
-	// @Mutation('/login')
-	// async login(@Body() accountHolder: Signup) {
-	// 	return this.userService.login(accountHolder)
-	// }
-
-	// @Delete('logout')
-	// async logout(@Body() body: RefreshTokenDto) {
-	//   return this.authService.logout(body.refreshToken);
-	// }
+	@Mutation(() => AccessUserPayload)
+	async login(@Args('login') login: Signup) {
+		return this.userService.login(login);
+	}
 }

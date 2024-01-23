@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -7,6 +7,7 @@ import UpdateUser from '../DTO/updateUserDTO';
 import Signup from 'src/DTO/signup';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { AccessUserPayload } from 'src/DTO/accessTokenDTO';
 
 
 @Injectable()
@@ -38,7 +39,6 @@ export class UserService {
 
   async getAllUsers(): Promise<Array<User>> {
     const user = await this.usersRepository.find();
-    console.log("user?????????????>>>>>>>>>", user)
     return user;
   }
 
@@ -55,12 +55,9 @@ export class UserService {
         .createQueryBuilder()
         .update()
         .set({
-
           email: user.email,
           password: user.password,
           avatar: user.avatar,
-
-
         })
         .where('id = :id', { id })
         .execute();
@@ -89,7 +86,7 @@ export class UserService {
   async signup(user: Signup) {
     const accountExists = await this.findOneByEmail(user.email);
     console.log(accountExists);
-    if (accountExists) return ("User already exist");
+    if (accountExists) throw new BadRequestException('User Already exist');
     const saltOrRounds = 10;
     const hashedPassword = await bcrypt.hash(user.password, saltOrRounds);
     user.password = hashedPassword;
@@ -98,11 +95,11 @@ export class UserService {
     return result;
   }
 
-  async login(accountHolder: Signup) {
+  async login(accountHolder: Signup): Promise<AccessUserPayload> {
     try {
       const userExist = await this.findOneByEmail(accountHolder.email)
       if (!userExist) {
-        return ('User not found')
+        throw new UnauthorizedException("Invalid Credentials")
       }
 
       const passwordMAtch = await bcrypt.compare(accountHolder.password, userExist.password)
@@ -112,12 +109,11 @@ export class UserService {
         const payloadRefresh = { userId: userExist.id };
 
         return {
-          access_token: this.jwtService.sign(payloadAccess),
-          refresh_token: this.jwtService.sign(payloadRefresh),
+          accessToken: this.jwtService.sign(payloadAccess),
         }
       }
 
-      else return ('Wrong Password')
+      else throw new UnauthorizedException("Invalid Credentials")
     } catch (error) {
       console.log(error);
     }
