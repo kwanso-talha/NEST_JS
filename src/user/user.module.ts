@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +8,7 @@ import { JwtAccessStrategy } from '../jwt.acces.strategy';
 import { JwtRefreshStrategy } from '../jwt.refresh.strategy'
 import { MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { AuthenticationMiddleware } from '../Middlewares/isAuth'
+import { UserResolver } from './user.resolver';
 
 
 @Module({
@@ -26,8 +26,8 @@ import { AuthenticationMiddleware } from '../Middlewares/isAuth'
 
     PassportModule,
   ],
-  controllers: [UserController],
-  providers: [UserService, JwtAccessStrategy, JwtRefreshStrategy],
+  // controllers: [UserController],
+  providers: [UserService, JwtAccessStrategy, JwtRefreshStrategy, UserResolver],
   exports: [UserService]
 })
 

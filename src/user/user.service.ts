@@ -19,7 +19,7 @@ export class UserService {
 
   ) { }
 
-  findAll(): Promise<User[]> {
+  async findAll(): Promise<User[]> {
     return this.usersRepository.find();
   }
 
@@ -36,8 +36,10 @@ export class UserService {
     await this.usersRepository.delete(id);
   }
 
-  getAllUsers() {
-    return this.usersRepository.find();
+  async getAllUsers(): Promise<Array<User>> {
+    const user = await this.usersRepository.find();
+    console.log("user?????????????>>>>>>>>>", user)
+    return user;
   }
 
   // RefreshTokens = [];
